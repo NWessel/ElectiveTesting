@@ -1,4 +1,4 @@
-﻿@model ElectiveTesting.Models.Election
+﻿@model ElectiveTesting.ViewModels.ElectionCreateData
 
 @{
     ViewBag.Title = "Create";
@@ -16,13 +16,62 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.election.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.election.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.election.Name, "", new { @class = "text-danger" })
             </div>
         </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.election.Electives, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <table>
+                    <tr>
+                        @{
+                            int cnt = 0;
+                            List<ElectiveTesting.ViewModels.AssignedElectiveData> electives = ViewBag.Electives;
 
+                            foreach (var elective in electives)
+                            {
+                                if (cnt++ % 2 == 0)
+                                {
+                                    @:</tr><tr>
+                                }
+                                @:<td>
+                                    <input type="checkbox"
+                                           name="selectedElectives"
+                                           value="@elective.ElectiveId"
+                                           @(Html.Raw(elective.Assigned ? "checked=\"checked\"" : "")) />
+                                           @elective.Name
+                                @:</td>
+                            }
+                            @:</tr>
+                        }
+                    </table>
+                </div>
+            </div>
+
+        <div class="form-group">
+            @Html.Label("Participants", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <table>
+                    @Html.Label("All users")
+                    <tr>
+                        <td>
+                                @Html.ListBoxFor(model => model.availableUsers, new MultiSelectList(Model.availableUsers, "Email"), new { size = "10" })
+
+                                <input id="btnAddAll" type="button" value=" Add all " onclick="addallItems();" />
+                                <input id="btnAdd" type="button" value=" Add " onclick="addItem();" />
+                                <input id="btnRemove" type="button" value=" Remove " onclick="removeItem();" />
+                                <input id="btnRemoveAll" type="button" value=" Remove all " onclick="removeallItems();" />
+                                
+                                <select style="width: 196px;" class="cmbBox1" id="invitedUsers"
+                                    multiple="multiple" name="invitedUsers" size="10"></select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -38,3 +87,29 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script type="text/javascript">
+function addItem() {
+    $("#availableUsers option:selected").appendTo("#invitedUsers");
+    $("#invitedUsers option").attr("selected", false);
+}
+function addallItems() {
+    $("#availableUsers option").appendTo("#invitedUsers");
+    $("#invitedUsers option").attr("selected", false);
+}
+function removeItem() {
+    $("#invitedUsers option:selected").appendTo("#availableUsers");
+    $("#availableUsers option").attr("selected", false);
+}
+function removeallItems() {
+    $("#invitedUsers option").appendTo("#availableUsers");
+    $("#availableUsers option").attr("selected", false);
+}
+$(function () {
+    // this event fires when the browser is about to submit a form
+    $('#UserForm').submit(function () {
+        // modifies the 'selected' options on the list 
+        // before finally being submitted by the browser
+        $('#invitedUsers option').prop('selected', true);
+    });
+});
+</script>

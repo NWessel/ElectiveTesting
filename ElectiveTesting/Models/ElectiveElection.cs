@@ -7,7 +7,7 @@ using System.Web;
 
 namespace ElectiveTesting.Models
 {
-    public class Vote
+    public class ElectiveElection
     {
         [Key]
         [ForeignKey("Election")]
@@ -17,14 +17,8 @@ namespace ElectiveTesting.Models
         [ForeignKey("Elective")]
         [Column(Order = 2)]
         public int ElectiveId { get; set; }
-        [Key]
-        [ForeignKey("ApplicationUser")]
-        [Column(Order=3)]
-        public string ApplicationUserId { get; set; }
 
         public virtual Election Election { get; set; }
         public virtual Elective Elective { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
-
     }
 }

@@ -1,5 +1,4 @@
-﻿@model IEnumerable<ElectiveTesting.Models.Election>
-
+﻿@model ElectiveTesting.ViewModels.ElectionIndexData
 @{
     ViewBag.Title = "Index";
 }
@@ -7,27 +6,51 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create a new Election", "Create")
+</p>
+<p>
+    @Html.ActionLink("Create Electives", "Index", "Elective")
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
+        <th>Name</th>
+        <th>Participants</th>
+        <th>Electives</th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ElectionId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ElectionId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ElectionId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.Elections)
+    {
+        string selectedRow = "";
+        //if (item.Id == ViewBag.ElectionID)
+        //{
+        //}    
+            selectedRow = "success";
+        
+        <tr class="@selectedRow">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => @item.ApplicationUsers.Count)
+            </td>
+            
+            <td>
+                @{
+                    foreach (var elective in item.Electives)
+                    {
+                          @elective.Name <br />
+                    }
+                }
+            </td>
+
+            <td>
+                @*@Html.ActionLink("Select", "Index", new { id = item.ID }) |*@
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>

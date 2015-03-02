@@ -15,7 +15,7 @@
         <h4>Election</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ElectionId)
+        @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -24,6 +24,36 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <table>
+                    <tr>
+                        @{
+                        int cnt = 0;
+                        List<ElectiveTesting.ViewModels.AssignedElectiveData> electives = ViewBag.Electives;
+
+                        foreach (var elective in electives)
+                        {
+                                if (cnt++ % 3 == 0)
+                                {
+                                    @:</tr><tr>
+                                }
+                                @:<td>
+                                     <input type="checkbox"
+                                        name="selectedElectives"
+                                        value="@elective.ElectiveId"
+                                        @(Html.Raw(elective.Assigned ? "checked=\"checked\"" : "")) />
+                                        @elective.Name
+                               @:</td>
+                         }
+                         @:</tr>
+                        }
+                    </table>
+                </div>
+            </div>
+
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

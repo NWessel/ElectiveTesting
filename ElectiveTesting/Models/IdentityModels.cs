@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Collections.Generic;
 
 namespace ElectiveTesting.Models
 {
@@ -17,6 +18,9 @@ namespace ElectiveTesting.Models
             // Add custom user claims here
             return userIdentity;
         }
+        public virtual ICollection<Elective> Electives { get; set; }
+        public virtual ICollection<Election> Elections { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -34,7 +38,6 @@ namespace ElectiveTesting.Models
         public DbSet<Election> Elections { get; set; }
         public DbSet<Elective> Electives { get; set; }
         public DbSet<Vote> Votes { get; set; }
-        public DbSet<UserElection> UserElections { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
