@@ -96,7 +96,7 @@ namespace ElectiveTesting.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Election election, string[] selectedElectives, string[] addedParticipants)
+        public ActionResult Create([Bind(Include = "Id,Name")] Election election, string[] selectedElectives, string[] invitedUsers)
         {
             if (selectedElectives != null)
             {
@@ -105,6 +105,16 @@ namespace ElectiveTesting.Controllers
                 {
                     var electiveToAdd = db.Electives.Find(int.Parse(elective));
                     election.Electives.Add(electiveToAdd);
+                }
+            }
+
+            if(invitedUsers != null)
+            {
+                election.ApplicationUsers = new List<ApplicationUser>();
+                foreach (var mail in invitedUsers)
+                {
+                    var userToAdd = manager.FindByEmail(mail);
+                    election.ApplicationUsers.Add(userToAdd);
                 }
             }
 
@@ -203,20 +213,20 @@ namespace ElectiveTesting.Controllers
             }
 
             var selectedElectivesHS = new HashSet<string>(selectedElectives);
-            var instructorCourses = new HashSet<int>
+            var electionElectives = new HashSet<int>
                 (electionToUpdate.Electives.Select(c => c.Id));
             foreach (var elective in db.Electives)
             {
                 if (selectedElectivesHS.Contains(elective.Id.ToString()))
                 {
-                    if (!instructorCourses.Contains(elective.Id))
+                    if (!electionElectives.Contains(elective.Id))
                     {
                         electionToUpdate.Electives.Add(elective);
                     }
                 }
                 else
                 {
-                    if (instructorCourses.Contains(elective.Id))
+                    if (electionElectives.Contains(elective.Id))
                     {
                         electionToUpdate.Electives.Remove(elective);
                     }

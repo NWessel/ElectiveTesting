@@ -50,6 +50,5 @@ C:\Users\Nicklas Wessel\Documents\Visual Studio 2013\Projects\ElectiveTesting\El
 C:\Users\Nicklas Wessel\Documents\Visual Studio 2013\Projects\ElectiveTesting\ElectiveTesting\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\Nicklas Wessel\Documents\Visual Studio 2013\Projects\ElectiveTesting\ElectiveTesting\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\Nicklas Wessel\Documents\Visual Studio 2013\Projects\ElectiveTesting\ElectiveTesting\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\Nicklas Wessel\Documents\Visual Studio 2013\Projects\ElectiveTesting\ElectiveTesting\obj\Debug\ElectiveTesting.csprojResolveAssemblyReference.cache
 C:\Users\Nicklas Wessel\Documents\Visual Studio 2013\Projects\ElectiveTesting\ElectiveTesting\obj\Debug\ElectiveTesting.dll
 C:\Users\Nicklas Wessel\Documents\Visual Studio 2013\Projects\ElectiveTesting\ElectiveTesting\obj\Debug\ElectiveTesting.pdb

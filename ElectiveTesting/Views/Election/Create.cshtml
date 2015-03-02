@@ -7,7 +7,7 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
@@ -58,15 +58,17 @@
                     @Html.Label("All users")
                     <tr>
                         <td>
+                             
                                 @Html.ListBoxFor(model => model.availableUsers, new MultiSelectList(Model.availableUsers, "Email"), new { size = "10" })
 
-                                <input id="btnAddAll" type="button" value=" Add all " onclick="addallItems();" />
+                                @*<input id="btnAddAll" type="button" value=" Add all " onclick="addallItems();" />*@
                                 <input id="btnAdd" type="button" value=" Add " onclick="addItem();" />
                                 <input id="btnRemove" type="button" value=" Remove " onclick="removeItem();" />
                                 <input id="btnRemoveAll" type="button" value=" Remove all " onclick="removeallItems();" />
-                                
+                            
                                 <select style="width: 196px;" class="cmbBox1" id="invitedUsers"
-                                    multiple="multiple" name="invitedUsers" size="10"></select>
+                                        multiple="multiple" name="invitedUsers" size="10"></select>
+                            
                         </td>
                     </tr>
                 </table>
@@ -88,6 +90,11 @@
     @Scripts.Render("~/bundles/jqueryval")
 }
 <script type="text/javascript">
+$(function selectAllItems() {
+    $("#inviteForm").submit(function () {
+        $("#invitedUsers option").attr("selected", true);
+    });
+});
 function addItem() {
     $("#availableUsers option:selected").appendTo("#invitedUsers");
     $("#invitedUsers option").attr("selected", false);
@@ -104,12 +111,5 @@ function removeallItems() {
     $("#invitedUsers option").appendTo("#availableUsers");
     $("#availableUsers option").attr("selected", false);
 }
-$(function () {
-    // this event fires when the browser is about to submit a form
-    $('#UserForm').submit(function () {
-        // modifies the 'selected' options on the list 
-        // before finally being submitted by the browser
-        $('#invitedUsers option').prop('selected', true);
-    });
-});
+
 </script>
