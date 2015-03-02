@@ -1,4 +1,4 @@
-﻿@model ElectiveTesting.Models.Election
+﻿@model ElectiveTesting.ViewModels.ElectionCreateData
 
 @{
     ViewBag.Title = "Edit";
@@ -15,13 +15,13 @@
         <h4>Election</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.election.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.election.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.election.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.election.Name, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -52,12 +52,29 @@
                     </table>
                 </div>
             </div>
-
-
-
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            @Html.Label("Participants", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Label("All users")<div>@Html.Label("Invited users")</div>
+                <table>
+                    <tr>
+                        <td>
+
+                            @Html.ListBoxFor(model => model.availableUsers, new MultiSelectList(Model.availableUsers, "Email"), new { size = "10", style = "width: 250px;" })
+
+                            @*<input id="btnAddAll" type="button" value=" Add all " onclick="addallItems();" />*@
+                            <div class="col-md-offset-2 col-md-10">
+
+                                <input id="btnAdd" type="button" value=" Add " onclick="addItem();" />
+                                <input id="btnRemove" type="button" value=" Remove " onclick="removeItem();" />
+                                <input id="btnRemoveAll" type="button" value=" Remove all " onclick="removeallItems();" />
+                            </div>
+                            @Html.ListBoxFor(model => model.invitedUsers, new MultiSelectList(Model.invitedUsers, "Email"), new { size = "10", style = "width: 250px;" })
+                            
+                        </td>
+                    </tr>
+                </table>
+                <input type="submit" value="Create" class="btn btn-default" onclick="markAllInvited();" />
             </div>
         </div>
     </div>
@@ -70,3 +87,30 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script type="text/javascript">
+    $(function selectAllItems() {
+        $("#inviteForm").submit(function () {
+            $("#invitedUsers option").attr("selected", true);
+        });
+    });
+    function addItem() {
+        $("#availableUsers option:selected").appendTo("#invitedUsers");
+        $("#invitedUsers option").attr("selected", false);
+    }
+    function markAllInvited() {
+        $("#availableUsers option:selected").appendTo("#invitedUsers");
+        $("#invitedUsers option").attr("selected", true);
+    }
+    function addallItems() {
+        $("#availableUsers option").appendTo("#invitedUsers");
+        $("#invitedUsers option").attr("selected", false);
+    }
+    function removeItem() {
+        $("#invitedUsers option:selected").appendTo("#availableUsers");
+        $("#availableUsers option").attr("selected", false);
+    }
+    function removeallItems() {
+        $("#invitedUsers option").appendTo("#availableUsers");
+        $("#availableUsers option").attr("selected", false);
+    }
+</script>

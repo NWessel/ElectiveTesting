@@ -132,20 +132,42 @@ namespace ElectiveTesting.Controllers
         // GET: Election/Edit/5
         public ActionResult Edit(int? id)
         {
+            var vm = new ElectionCreateData();
+            
+            Election election = db.Elections
+                .Include(e => e.Electives)
+                .Include(e => e.ApplicationUsers)
+                .Where(e => e.Id == id)
+                .Single();
+            PopulateAssignedElectiveData(election);
+
+            vm.election = election;
+            vm.invitedUsers = election.ApplicationUsers.Select(e => e.Email);
+            vm.availableUsers = db.Users.Select(u => u.Email);
+
+            var invited = new HashSet<string>(vm.invitedUsers);
+            var available = new HashSet<string>(vm.availableUsers);
+
+            foreach (var allUsers in db.Users)
+            {
+                if(invited.Contains(allUsers.Email))
+                {
+                    available.Remove(allUsers.Email);
+                }
+
+            }
+            vm.availableUsers = available;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Election election = db.Elections
-                .Include(e => e.Electives)
-                .Where(e => e.Id == id)
-                .Single();
-            PopulateAssignedElectiveData(election);
+            
             if (election == null)
             {
                 return HttpNotFound();
             }
-            return View(election);
+            
+            return View(vm);
         }
 
         private void PopulateAssignedElectiveData(Election election)

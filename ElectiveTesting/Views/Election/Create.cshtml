@@ -59,24 +59,21 @@
                     <tr>
                         <td>
                              
-                                @Html.ListBoxFor(model => model.availableUsers, new MultiSelectList(Model.availableUsers, "Email"), new { size = "10" })
+                                @Html.ListBoxFor(model => model.availableUsers, new MultiSelectList(Model.availableUsers, "Email"), new { size = "10", style = "width: 250px;" })
 
                                 @*<input id="btnAddAll" type="button" value=" Add all " onclick="addallItems();" />*@
+                            <div class="col-md-offset-2 col-md-10">
+                                
                                 <input id="btnAdd" type="button" value=" Add " onclick="addItem();" />
                                 <input id="btnRemove" type="button" value=" Remove " onclick="removeItem();" />
-                                <input id="btnRemoveAll" type="button" value=" Remove all " onclick="removeallItems();" />
-                            
-                                <select style="width: 196px;" class="cmbBox1" id="invitedUsers"
-                                        multiple="multiple" name="invitedUsers" size="10"></select>
-                            
+                                <input id="btnRemoveAll" type="button" value=" Remove all " onclick="removeallItems();" />                                                
+                            </div>
+                            <select style="width: 250px;" class="cmbBox1" id="invitedUsers" multiple="multiple" name="invitedUsers" size="10"></select>
+
                         </td>
                     </tr>
                 </table>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" onclick="markAllInvited();" />   
             </div>
         </div>
     </div>
@@ -99,6 +96,10 @@ function addItem() {
     $("#availableUsers option:selected").appendTo("#invitedUsers");
     $("#invitedUsers option").attr("selected", false);
 }
+function markAllInvited() {
+    $("#availableUsers option:selected").appendTo("#invitedUsers");
+    $("#invitedUsers option").attr("selected", true);
+}
 function addallItems() {
     $("#availableUsers option").appendTo("#invitedUsers");
     $("#invitedUsers option").attr("selected", false);
@@ -111,5 +112,4 @@ function removeallItems() {
     $("#invitedUsers option").appendTo("#availableUsers");
     $("#availableUsers option").attr("selected", false);
 }
-
 </script>
