@@ -192,7 +192,7 @@ namespace ElectiveTesting.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, string[] selectedElectives)
+        public ActionResult Edit(int? id, string[] selectedElectives, string[] invitedUsers)
         {
             if (id == null)
             {
@@ -201,6 +201,7 @@ namespace ElectiveTesting.Controllers
 
             var electionToUpdate = db.Elections
                .Include(i => i.Electives)
+               .Include(i => i.ApplicationUsers)
                .Where(i => i.Id == id)
                .Single();
 
@@ -209,7 +210,7 @@ namespace ElectiveTesting.Controllers
             {
                 try
                 {
-                    UpdateElectionElectives(selectedElectives, electionToUpdate);
+                    UpdateElectionElectives(invitedUsers, selectedElectives, electionToUpdate);
 
                     db.Entry(electionToUpdate).State = EntityState.Modified;
                     db.SaveChanges();
@@ -226,17 +227,41 @@ namespace ElectiveTesting.Controllers
             return View(electionToUpdate);
         }
 
-        private void UpdateElectionElectives(string[] selectedElectives, Election electionToUpdate)
+        private void UpdateElectionElectives(string [] invitedUsers, string[] selectedElectives, Election electionToUpdate)
         {
             if (selectedElectives == null)
             {
                 electionToUpdate.Electives = new List<Elective>();
                 return;
             }
+            if (invitedUsers == null)
+            {
+                electionToUpdate.ApplicationUsers = new List<ApplicationUser>();
+            }
+
+            var invitedUsersHS = new HashSet<string>(invitedUsers);
+            var electionUsers = new HashSet<string>(electionToUpdate.ApplicationUsers.Select(c => c.Email));
+
+            foreach (var user in db.Users)
+            {
+                if(invitedUsersHS.Contains(user.Email))
+                {
+                    if(!electionUsers.Contains(user.Email))
+                    {
+                        electionToUpdate.ApplicationUsers.Add(user);
+                    }
+                }
+                else
+                {
+                    if(electionUsers.Contains(user.Email))
+                    {
+                        electionToUpdate.ApplicationUsers.Remove(user);
+                    }
+                }
+            }
 
             var selectedElectivesHS = new HashSet<string>(selectedElectives);
-            var electionElectives = new HashSet<int>
-                (electionToUpdate.Electives.Select(c => c.Id));
+            var electionElectives = new HashSet<int>(electionToUpdate.Electives.Select(c => c.Id));
             foreach (var elective in db.Electives)
             {
                 if (selectedElectivesHS.Contains(elective.Id.ToString()))
