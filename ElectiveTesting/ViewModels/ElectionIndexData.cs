@@ -11,5 +11,6 @@ namespace ElectiveTesting.ViewModels
         public IEnumerable<Election> Elections { get; set; }
         public IEnumerable<Elective> Electives { get; set; }
         public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
+        public IEnumerable<Election> InvitedToElections { get; set; }
     }
 }

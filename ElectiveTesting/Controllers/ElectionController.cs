@@ -62,7 +62,27 @@ namespace ElectiveTesting.Controllers
             //    viewModel.Enrollments = selectedCourse.Enrollments;
             //}
 
+            //viewModel.InvitedToElections = db.Elections.Where(e => e.ApplicationUsers == currentUser)
+            //    .Include(e => e.Electives);
+
+            //viewModel.InvitedToElections = db.Elections
+            //    .Include(e => e.ApplicationUsers.Where(u => u.Id == currentUser.Id));
+
+            //viewModel.InvitedToElections = db.Elections.Where(e => e.ApplicationUsers == currentUser)
+            //    .Include(e => e.Electives)
+            //    .Include(e => e.ApplicationUsers)
+            //    .OrderBy(e => e.Name);
+
+            viewModel.InvitedToElections = db.Elections.Where(e => e.ApplicationUsers.Any(au => au.Id == currentUser.Id))
+                .Include(e => e.Electives);
+
             return View(viewModel);
+        }
+
+        // GET: Election/Vote
+        public ActionResult Vote()
+        {
+            return View();
         }
 
         // GET: Election/Details/5
@@ -172,7 +192,8 @@ namespace ElectiveTesting.Controllers
 
         private void PopulateAssignedElectiveData(Election election)
         {
-            var allElectives = db.Electives;
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            var allElectives = db.Electives.Where(e => e.HostId == currentUser.Id);
             var electionElectives = new HashSet<int>(election.Electives.Select(e => e.Id));
             var viewModel = new List<AssignedElectiveData>();
             foreach (var elective in allElectives)

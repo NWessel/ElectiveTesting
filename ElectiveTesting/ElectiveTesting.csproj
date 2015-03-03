@@ -247,6 +247,7 @@
     <Content Include="Views\Elective\Details.cshtml" />
     <Content Include="Views\Elective\Edit.cshtml" />
     <Content Include="Views\Elective\Index.cshtml" />
+    <Content Include="Views\Election\Vote.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

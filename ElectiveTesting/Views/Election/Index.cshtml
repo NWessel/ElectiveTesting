@@ -3,7 +3,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Hosted elections</h2>
 
 <p>
     @Html.ActionLink("Create a new Election", "Create")
@@ -21,13 +21,7 @@
 
     @foreach (var item in Model.Elections)
     {
-        string selectedRow = "";
-        //if (item.Id == ViewBag.ElectionID)
-        //{
-        //}    
-            selectedRow = "success";
-        
-        <tr class="@selectedRow">
+        <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -54,3 +48,39 @@
     }
 
 </table>
+
+@if (Model.InvitedToElections != null)
+{
+    <h3>Elections you can participate in</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Electives</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.InvitedToElections)
+        {
+            
+            <tr>
+                <td>
+                    @Html.ActionLink("Vote", "Vote", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @{
+                        foreach (var elective in item.Electives)
+                        {
+                            @elective.Name <br />
+                        }
+                    }
+                </td>
+
+            </tr>
+        }
+
+    </table>
+}
