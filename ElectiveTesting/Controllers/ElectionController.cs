@@ -62,17 +62,6 @@ namespace ElectiveTesting.Controllers
             //    viewModel.Enrollments = selectedCourse.Enrollments;
             //}
 
-            //viewModel.InvitedToElections = db.Elections.Where(e => e.ApplicationUsers == currentUser)
-            //    .Include(e => e.Electives);
-
-            //viewModel.InvitedToElections = db.Elections
-            //    .Include(e => e.ApplicationUsers.Where(u => u.Id == currentUser.Id));
-
-            //viewModel.InvitedToElections = db.Elections.Where(e => e.ApplicationUsers == currentUser)
-            //    .Include(e => e.Electives)
-            //    .Include(e => e.ApplicationUsers)
-            //    .OrderBy(e => e.Name);
-
             viewModel.InvitedToElections = db.Elections.Where(e => e.ApplicationUsers.Any(au => au.Id == currentUser.Id))
                 .Include(e => e.Electives);
 
@@ -80,8 +69,45 @@ namespace ElectiveTesting.Controllers
         }
 
         // GET: Election/Vote
-        public ActionResult Vote()
+        public ActionResult Vote(int? id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Election election = db.Elections.Find(id);
+            PopulateAssignedElectiveData(election);
+            return View(election);
+        }
+
+        // Post: Election/Vote
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Vote(int id, int voted)
+        {
+            
+            var vote = new Vote();
+            vote.ElectionId = id;
+            vote.ElectiveId = voted;
+            vote.ApplicationUserId = User.Identity.GetUserId();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.Entry(vote).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    db.Votes.Add(vote);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                
+            }
             return View();
         }
 
@@ -213,13 +239,13 @@ namespace ElectiveTesting.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, string[] selectedElectives, string[] invitedUsers)
+        public ActionResult Edit(Election election, int? id, string[] selectedElectives, string[] invitedUsers)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
+            var name = election.Name;
             var electionToUpdate = db.Elections
                .Include(i => i.Electives)
                .Include(i => i.ApplicationUsers)
@@ -231,6 +257,7 @@ namespace ElectiveTesting.Controllers
             {
                 try
                 {
+                    electionToUpdate.Name = name;
                     UpdateElectionElectives(invitedUsers, selectedElectives, electionToUpdate);
 
                     db.Entry(electionToUpdate).State = EntityState.Modified;

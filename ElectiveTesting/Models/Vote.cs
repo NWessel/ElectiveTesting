@@ -13,7 +13,6 @@ namespace ElectiveTesting.Models
         [ForeignKey("Election")]
         [Column(Order = 1)]
         public int ElectionId { get; set; }
-        [Key]
         [ForeignKey("Elective")]
         [Column(Order = 2)]
         public int ElectiveId { get; set; }
