@@ -27,7 +27,8 @@ namespace ElectiveTesting.Controllers
         // GET: Elective
         public ActionResult Index()
         {
-            var electives = db.Electives.Include(e => e.ApplicationUser);
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            var electives = db.Electives.Where(e => e.HostId == currentUser.Id);
             return View(electives.ToList());
         }
 
