@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="goelection" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\Nicklas\ Wessel\\Documents\\Visual\ Studio\ 2013\\Projects\\ElectiveTesting\\ElectiveTesting\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\Nicklas\ Wessel\\Documents\\Visual\ Studio\ 2013\\Projects\\ElectiveTesting\\ElectiveTesting\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="" value="Data Source=tcp:z4465gg8wn.database.windows.net,1433;Initial Catalog=goelection_db;User Id=NWessel@z4465gg8wn;Password=Skoubo12" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Nicklas\ Wessel\\Documents\\Visual\ Studio\ 2013\\Projects\\ElectiveTesting\\ElectiveTesting\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

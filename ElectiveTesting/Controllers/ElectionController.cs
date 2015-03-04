@@ -76,7 +76,7 @@ namespace ElectiveTesting.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Election election = db.Elections.Find(id);
-            PopulateAssignedElectiveData(election);
+            PopulateElectionElectiveData(election);
             return View(election);
         }
 
@@ -109,6 +109,21 @@ namespace ElectiveTesting.Controllers
                 
             }
             return View();
+        }
+        private void PopulateElectionElectiveData(Election election)
+        {
+            var electionElectives = new HashSet<int>(election.Electives.Select(e => e.Id));
+            var viewModel = new List<AssignedElectiveData>();
+            foreach (var elective in election.Electives)
+            {
+                viewModel.Add(new AssignedElectiveData
+                {
+                    ElectiveId = elective.Id,
+                    Name = elective.Name,
+                    Assigned = electionElectives.Contains(elective.Id)
+                });
+            }
+            ViewBag.Electives = viewModel;
         }
 
         // GET: Election/Details/5
