@@ -45,22 +45,22 @@ namespace ElectiveTesting.Controllers
                     i => i.Id == id.Value).Single().Electives;
             }
 
-            //if (electiveId != null)
-            //{
-            //    ViewBag.ElectiveId = electiveId.Value;
-            //    // Lazy loading
-            //    //viewModel.Enrollments = viewModel.Courses.Where(
-            //    //    x => x.CourseID == courseID).Single().Enrollments;
-            //    // Explicit loading
-            //    var selectedElective = viewModel.Electives.Where(x => x.Id == electiveId).Single();
-            //    db.Entry(selectedElective).Collection(x => x.Enrollments).Load();
-            //    foreach (Enrollment enrollment in selectedCourse.Enrollments)
-            //    {
-            //        db.Entry(enrollment).Reference(x => x.Student).Load();
-            //    }
+            if (electiveId != null)
+            {
+                ViewBag.ElectiveId = electiveId.Value;
+                // Lazy loading
+                //viewModel.Enrollments = viewModel.Courses.Where(
+                //    x => x.CourseID == courseID).Single().Enrollments;
+                // Explicit loading
+                var selectedElective = viewModel.Electives.Where(x => x.Id == electiveId).Single();
+                db.Entry(selectedElective).Collection(x => x.Votes).Load();
+                foreach (Vote vote in selectedElective.Votes)
+                {
+                    db.Entry(vote).Reference(x => x.ApplicationUser).Load();
+                }
 
-            //    viewModel.Enrollments = selectedCourse.Enrollments;
-            //}
+                viewModel.Votes = selectedElective.Votes;
+            }
 
             viewModel.InvitedToElections = db.Elections.Where(e => e.ApplicationUsers.Any(au => au.Id == currentUser.Id))
                 .Include(e => e.Electives);
